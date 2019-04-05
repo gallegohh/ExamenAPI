@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examen.ApiCore", "Examen.ApiCore\Examen.ApiCore.csproj", "{968CBAC0-058D-4DAB-A212-15DD8213FCFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examen.DB", "Examen.DB\Examen.DB.csproj", "{00CDDA5F-69BB-4112-9F14-EB7BB5232EA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examen.Cliente", "Examen.Cliente\Examen.Cliente.csproj", "{7EC9496B-C5FE-4267-89F0-B1F7CDEDEA15}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{968CBAC0-058D-4DAB-A212-15DD8213FCFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{968CBAC0-058D-4DAB-A212-15DD8213FCFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{968CBAC0-058D-4DAB-A212-15DD8213FCFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{968CBAC0-058D-4DAB-A212-15DD8213FCFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00CDDA5F-69BB-4112-9F14-EB7BB5232EA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00CDDA5F-69BB-4112-9F14-EB7BB5232EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00CDDA5F-69BB-4112-9F14-EB7BB5232EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00CDDA5F-69BB-4112-9F14-EB7BB5232EA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EC9496B-C5FE-4267-89F0-B1F7CDEDEA15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EC9496B-C5FE-4267-89F0-B1F7CDEDEA15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EC9496B-C5FE-4267-89F0-B1F7CDEDEA15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EC9496B-C5FE-4267-89F0-B1F7CDEDEA15}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
