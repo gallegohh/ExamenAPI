@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Examen.DB;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace Examen.Cliente.Controllers
 {
@@ -68,31 +69,35 @@ namespace Examen.Cliente.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(products);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var response = await cliente.PostAsync<Products>("Products", products, new JsonMediaTypeFormatter());
+                if (response.StatusCode == System.Net.HttpStatusCode.Created) return RedirectToAction("Index");
             }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
-            ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
+            ViewData["CategoryID"] = new SelectList(await (await cliente.GetAsync("Categories")).Content.ReadAsAsync<IEnumerable<Categories>>(), "CategoryID", "CategoryName");
+            ViewData["SupplierID"] = new SelectList(await (await cliente.GetAsync("Suppliers")).Content.ReadAsAsync<IEnumerable<Suppliers>>(), "SupplierID", "CompanyName");
             return View(products);
         }
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id != null)
             {
+                var response = await cliente.GetAsync("Products/"+id);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var product = await response.Content.ReadAsAsync<Products>();
+                    if (product != null)
+                    {
+                        ViewData["CategoryID"] = new SelectList(await (await cliente.GetAsync("Categories")).Content.ReadAsAsync<IEnumerable<Categories>>(), "CategoryID", "CategoryName");
+                        ViewData["SupplierID"] = new SelectList(await (await cliente.GetAsync("Suppliers")).Content.ReadAsAsync<IEnumerable<Suppliers>>(), "SupplierID", "CompanyName");
+
+                        return View(product);
+                    }
+                }
                 return NotFound();
             }
 
-            var products = await _context.Products.FindAsync(id);
-            if (products == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
-            ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
-            return View(products);
+            return NotFound();
         }
 
         // POST: Products/Edit/5
@@ -102,54 +107,37 @@ namespace Examen.Cliente.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductID,ProductName,SupplierID,CategoryID,QuantityPerUnit,UnitPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued")] Products products)
         {
-            if (id != products.ProductID)
+            if (id == products.ProductID)
             {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(products);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductsExists(products.ProductID))
+                    var response = await cliente.PutAsync<Products>("Products/" + id, products, new JsonMediaTypeFormatter());
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        return RedirectToAction("Index");
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
-            ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
-            return View(products);
+            return NotFound();
         }
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id != null)
             {
-                return NotFound();
+                var response = await cliente.GetAsync("Products/" + id);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var product = await response.Content.ReadAsAsync<Products>();
+                    if (product != null)
+                    {
+                        return View(product);
+                    }
+                }
             }
 
-            var products = await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
-            if (products == null)
-            {
-                return NotFound();
-            }
-
-            return View(products);
+            return NotFound();
         }
 
         // POST: Products/Delete/5
@@ -157,10 +145,14 @@ namespace Examen.Cliente.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var products = await _context.Products.FindAsync(id);
-            _context.Products.Remove(products);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var response = await cliente.DeleteAsync("Products/" + id);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var product = await response.Content.ReadAsAsync<Products>();
+                return View(product);
+            }
+
+            return NotFound();
         }
 
         private bool ProductsExists(int id)
