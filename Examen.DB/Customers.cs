@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Examen.DB
 {
@@ -12,6 +13,7 @@ namespace Examen.DB
         }
 
         public string CustomerID { get; set; }
+        [Required]
         public string CompanyName { get; set; }
         public string ContactName { get; set; }
         public string ContactTitle { get; set; }

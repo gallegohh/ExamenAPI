@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Examen.DB;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace Examen.Cliente.Controllers
 {
@@ -45,19 +46,28 @@ namespace Examen.Cliente.Controllers
                 return NotFound();
             }
 
-            var customers = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerID == id);
-            if (customers == null)
+            var response = await cliente.GetAsync("Customers/" + id);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return NotFound();
+                var customer = await response.Content.ReadAsAsync<Customers>();
+                if (customer != null)
+                {
+                    return View(customer);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-
-            return View(customers);
+            else return NotFound();
         }
 
         // GET: Customers/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewData["CategoryId"] = new SelectList(await(await cliente.GetAsync("Categories")).Content.ReadAsAsync<IEnumerable<Categories>>());
+            ViewData["SupplierId"] = new SelectList(await(await cliente.GetAsync("Suppliers")).Content.ReadAsAsync<IEnumerable<Suppliers>>());
+
             return View();
         }
 
@@ -85,12 +95,15 @@ namespace Examen.Cliente.Controllers
                 return NotFound();
             }
 
-            var customers = await _context.Customers.FindAsync(id);
-            if (customers == null)
+            var response = await cliente.GetAsync("Customers/" + id);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return NotFound();
+                var customer = await response.Content.ReadAsAsync<Customers>();
+                if (customer != null) return View(customer);
+                else return NotFound();
             }
-            return View(customers);
+            else return NotFound();
+            
         }
 
         // POST: Customers/Edit/5
@@ -107,24 +120,16 @@ namespace Examen.Cliente.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var response = await cliente.PutAsync("Customers/" + id, customers, new JsonMediaTypeFormatter());
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent) return RedirectToAction("index");
                 {
-                    _context.Update(customers);
-                    await _context.SaveChangesAsync();
+                    return View("Customers");
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomersExists(customers.CustomerID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
+ 
+            ViewData["CategoryId"] = new SelectList(await (await cliente.GetAsync("Categories")).Content.ReadAsAsync<IEnumerable<Categories>>());
+            ViewData["SupplierId"] = new SelectList(await (await cliente.GetAsync("Suppliers")).Content.ReadAsAsync<IEnumerable<Suppliers>>());
+
             return View(customers);
         }
 
