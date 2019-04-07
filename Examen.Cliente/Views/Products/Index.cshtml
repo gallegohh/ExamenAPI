@@ -4,10 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+@section Scripts{
+<script>
+    $(document).ready(function (e) {
+        $('table').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+</script>
+}
+
+<h2 class="display-1">Lista de Productos</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-outline-primary btn-lg">Nuevo Producto</a>
 </p>
 <table class="table">
     <thead>
@@ -33,51 +45,58 @@
             <th>
                 @Html.DisplayNameFor(model => model.Discontinued)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Supplier)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantityPerUnit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitsInStock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitsOnOrder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReorderLevel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discontinued)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsInStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsOnOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReorderLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discontinued)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
+                </td>*@
+                <td>
+                    <div class="row">
+                        <a class="btn btn-warning btn-sm btn-block" asp-action="Edit" asp-route-id="@item.ProductID">Edit</a>
+                    </div>
+                    <div class="row">
+                        <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.ProductID">Details</a>
+                    </div>
+                    <div class="row">
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
