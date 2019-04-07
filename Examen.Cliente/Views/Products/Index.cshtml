@@ -5,15 +5,15 @@
 }
 
 @section Scripts{
-<script>
-    $(document).ready(function (e) {
-        $('table').DataTable({
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            }
+    <script>
+        $(document).ready(function (e) {
+            $('table').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                }
+            });
         });
-    });
-</script>
+    </script>
 }
 
 <h2 class="display-1">Lista de Productos</h2>
@@ -42,15 +42,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.ReorderLevel)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discontinued)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Supplier)
-            </th>*@
+            @*
+                <th>
+                    @Html.DisplayNameFor(model => model.Discontinued)
+                </th>
+                <th>
+                        @Html.DisplayNameFor(model => model.Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Supplier)
+                    </th>*@
             <th></th>
         </tr>
     </thead>
@@ -76,25 +77,27 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ReorderLevel)
                 </td>
+                @*
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Discontinued)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
+                    </td>
+                *@
                 <td>
-                    @Html.DisplayFor(modelItem => item.Discontinued)
-                </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
-                </td>*@
-                <td>
-                    <div class="row">
-                        <a class="btn btn-warning btn-sm btn-block" asp-action="Edit" asp-route-id="@item.ProductID">Edit</a>
-                    </div>
-                    <div class="row">
-                        <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.ProductID">Details</a>
-                    </div>
-                    <div class="row">
-                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-                    </div>
+
+                    <a class="btn btn-warning btn-block" asp-action="Edit" asp-route-id="@item.ProductID">Editar</a>
+
+
+                    <a class="btn btn-info btn-block" asp-action="Details" asp-route-id="@item.ProductID">Info</a>
+
+
+                    <a class="btn btn-danger btn-block" asp-action="Delete" asp-route-id="@item.ProductID">Borrar</a>
+
                 </td>
             </tr>
         }
